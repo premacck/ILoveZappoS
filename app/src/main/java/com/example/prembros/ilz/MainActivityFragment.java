@@ -33,7 +33,9 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ImageButton ib = (ImageButton) getActivity().findViewById(R.id.imageButton);
+        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        ImageButton ib = (ImageButton) rootView.findViewById(R.id.imageButton);
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -41,7 +43,7 @@ public class MainActivityFragment extends Fragment {
             }
         });
 
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return rootView;
     }
 
     public interface OnFragmentInteractionListener {

@@ -1,37 +1,33 @@
 package com.example.prembros.ilz;
 
 import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 
-public class MainActivity extends AppCompatActivity implements MainActivityFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements MainActivityFragment.OnFragmentInteractionListener,
+        ProductPage.OnFragmentInteractionListener {
 
     private GoogleApiClient googleApiClient;
-    private MaterialAutoCompleteTextView searchText;
     String searchString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
-
-        searchText = (MaterialAutoCompleteTextView) this.findViewById(R.id.search_text);
 
         MainActivityFragment mainActivityFragment = new MainActivityFragment();
         mainActivityFragment.setArguments(getIntent().getExtras());
@@ -98,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
         return super.onOptionsItemSelected(item);
     }
+/*
 
     public static void hideSoftKeyboard(Activity activity) {
         InputMethodManager inputMethodManager =
@@ -106,14 +103,29 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         inputMethodManager.hideSoftInputFromWindow(
                 activity.getCurrentFocus().getWindowToken(), 0);
     }
+*/
 
     @Override
     public void onFragmentInteractionInMain() {
-        hideSoftKeyboard(MainActivity.this);
+//        hideSoftKeyboard(this);
+        MaterialAutoCompleteTextView searchText = (MaterialAutoCompleteTextView) findViewById(R.id.search_text);
         searchString = searchText.getText().toString();
-        String fixedStr = "https://api.zappos.com/Search?term=" + searchString + "&key=b743e26728e16b81da139182bb2094357c31d331";
-        Intent intent = new Intent(MainActivity.this, ProductPage.class);
-        intent.putExtra("fixedStr", fixedStr);
-        startActivity(intent);
+        Bundle args = new Bundle();
+        args.putString("searchString", searchString);
+        String fixedString = "https://api.zappos.com/Search?term=" + searchString + "&key=b743e26728e16b81da139182bb2094357c31d331";
+        args.putString("fixedStr", fixedString);
+        ProductPage productPage = new ProductPage();
+        productPage.setArguments(args);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+                android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        transaction.replace(R.id.main_fragment, productPage);
+        transaction.addToBackStack("ProductPageLaunched");
+        transaction.commit();
+    }
+
+    @Override
+    public void onFragmentInteractionInProductPage() {
+
     }
 }
