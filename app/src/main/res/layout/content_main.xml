@@ -13,14 +13,18 @@
     tools:context="com.example.prembros.ilz.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <com.rengwuxian.materialedittext.MaterialAutoCompleteTextView
+    <com.rengwuxian.materialedittext.MaterialEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_above="@+id/imageButton"
         android:hint="@string/look_for_a_product"
         android:maxLines="1"
-        android:id="@+id/search_text"/>
+        android:inputType="textAutoComplete"
+        android:id="@+id/search_text"
+        android:ems="20"
+        app:met_baseColor="#000000"
+        app:met_floatingLabel="normal" />
 
     <ImageButton
         android:layout_width="wrap_content"

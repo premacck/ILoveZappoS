@@ -202,11 +202,11 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                     TextSliderView textSliderView = new TextSliderView(ProductPage.this);
                     // initialize a SliderLayout
                     textSliderView
-                            .description(p.getProductName())
                             .image(url_maps.get(name))
                             .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                             .setOnSliderClickListener(ProductPage.this);
 
+//                    .description(p.getProductName())
                     //add your extra information
                     textSliderView.bundle(new Bundle());
                     textSliderView.getBundle()
