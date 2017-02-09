@@ -25,7 +25,7 @@
         </activity>
         <activity
             android:name="com.example.prembros.ilz.ProductPage"
-            android:label="@string/title_activity_product_page"
+            android:label=""
             android:parentActivityName="com.example.prembros.ilz.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data

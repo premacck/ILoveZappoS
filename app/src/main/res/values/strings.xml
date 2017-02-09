@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ILZappos</string>
+    <string name="app_name">Zappos</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_product_page">ProductPage</string>
     <string name="look_for_a_product">Look for a product</string>
