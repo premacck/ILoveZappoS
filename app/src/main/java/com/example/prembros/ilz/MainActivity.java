@@ -4,20 +4,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
+
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 
-public class MainActivity extends AppCompatActivity implements MainActivityFragment.OnFragmentInteractionListener,
-        ProductPage.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     private GoogleApiClient googleApiClient;
     String searchString;
@@ -29,23 +30,42 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
 
-        MainActivityFragment mainActivityFragment = new MainActivityFragment();
-        mainActivityFragment.setArguments(getIntent().getExtras());
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(android.R.anim.fade_in, R.anim.slide_out_left,
-                android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        transaction.add(R.id.main_fragment, mainActivityFragment).commit();
+        final MaterialAutoCompleteTextView searchText = (MaterialAutoCompleteTextView) findViewById(R.id.search_text);
+        ImageButton imageButton = (ImageButton) findViewById(R.id.imageButton);
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideKeyboard(MainActivity.this);
+                searchString = searchText.getText().toString();
+                Intent intent = new Intent(MainActivity.this, ProductPage.class);
+                intent.putExtra("searchString", searchString);
+                String fixedString = "https://api.zappos.com/Search?term=" + searchString + "&key=b743e26728e16b81da139182bb2094357c31d331";
+                intent.putExtra("fixedStr", fixedString);
+                startActivity(intent);
+            }
+        });
+
+/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });*/
 
         googleApiClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
 
-//        FloatingActionButton fb = (FloatingActionButton) findViewById(R.id.fab);
-//        fb.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public Action getIndexApiAction() {
@@ -93,39 +113,5 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         }
 
         return super.onOptionsItemSelected(item);
-    }
-/*
-
-    public static void hideSoftKeyboard(Activity activity) {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) activity.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                activity.getCurrentFocus().getWindowToken(), 0);
-    }
-*/
-
-    @Override
-    public void onFragmentInteractionInMain() {
-//        hideSoftKeyboard(this);
-        MaterialAutoCompleteTextView searchText = (MaterialAutoCompleteTextView) findViewById(R.id.search_text);
-        searchString = searchText.getText().toString();
-        Bundle args = new Bundle();
-        args.putString("searchString", searchString);
-        String fixedString = "https://api.zappos.com/Search?term=" + searchString + "&key=b743e26728e16b81da139182bb2094357c31d331";
-        args.putString("fixedStr", fixedString);
-        ProductPage productPage = new ProductPage();
-        productPage.setArguments(args);
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
-                android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-        transaction.replace(R.id.main_fragment, productPage);
-        transaction.addToBackStack("ProductPageLaunched");
-        transaction.commit();
-    }
-
-    @Override
-    public void onFragmentInteractionInProductPage() {
-
     }
 }
