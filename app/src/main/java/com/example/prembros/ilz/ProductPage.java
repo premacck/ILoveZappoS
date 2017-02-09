@@ -2,6 +2,7 @@ package com.example.prembros.ilz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -17,6 +18,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.example.prembros.ilz.databinding.Bind_product;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,21 +37,19 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
 
     String fixedStr;
     Product p;
-    SliderLayout mDemoSlider;
+    Bind_product binding;
+    ActionBar ab;
     HashMap<String,String> url_maps = new HashMap<>();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_page);
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_product_page);
         Intent intent = getIntent();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_page);
-        setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_page);
+        setSupportActionBar(binding.toolbarProductPage);
+        ab = getSupportActionBar();
         if (ab!=null){
             ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle(intent.getStringExtra("searchString"));
-            ab.setSubtitle("Price");                                //YE NAHI HO RAHA HAI
         }
 
 /*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -166,7 +166,7 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
     @Override
     protected void onStop() {
         // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
-        mDemoSlider.stopAutoCycle();
+        binding.slider.stopAutoCycle();
         super.onStop();
     }
     private class HttpAsyncTask extends AsyncTask<String, Void, Product> {
@@ -189,6 +189,10 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
         @Override
         protected void onPostExecute(Product p) {
             if (p != null) {
+                binding.setProduct(p);
+                if (ab!=null) {
+                    ab.setTitle(p.getBrandName());
+                }
                 String url = p.getThumbnailImageUrl().replace("-THUMBNAIL","-MULTIVIEW");
                 url_maps.put("i1", url.replace("-t-","-p-"));
                 url_maps.put("i2", url.replace("-t-","-1-"));
@@ -208,13 +212,13 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                     textSliderView.getBundle()
                             .putString("extra",name);
 
-                    mDemoSlider.addSlider(textSliderView);
+                    binding.slider.addSlider(textSliderView);
                 }
-                mDemoSlider.setPresetTransformer(SliderLayout.Transformer.Default);
-                mDemoSlider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-                mDemoSlider.setCustomAnimation(new DescriptionAnimation());
-                mDemoSlider.setDuration(5000);
-                mDemoSlider.addOnPageChangeListener(ProductPage.this);
+                binding.slider.setPresetTransformer(SliderLayout.Transformer.Default);
+                binding.slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
+                binding.slider.setCustomAnimation(new DescriptionAnimation());
+                binding.slider.setDuration(5000);
+                binding.slider.addOnPageChangeListener(ProductPage.this);
             }
         }
     }
