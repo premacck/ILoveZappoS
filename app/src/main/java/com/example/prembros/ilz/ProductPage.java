@@ -1,7 +1,6 @@
 package com.example.prembros.ilz;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -9,7 +8,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -44,7 +42,7 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_product_page);
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_page);
         setSupportActionBar(binding.toolbarProductPage);
         ab = getSupportActionBar();
