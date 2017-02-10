@@ -19,4 +19,22 @@
         android:icon="@drawable/ic_shopping_cart"
         android:title="@string/your_cart"
         app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_wishList"
+        android:icon="@drawable/ic_wishlist"
+        android:title="@string/wishlist"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_about"
+        android:icon="@drawable/ic_about"
+        android:title="@string/about"
+        app:showAsAction="ifRoom"/>
 </menu>

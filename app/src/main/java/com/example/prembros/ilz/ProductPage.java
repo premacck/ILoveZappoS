@@ -1,26 +1,16 @@
 package com.example.prembros.ilz;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
-import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.TextSliderView;
@@ -220,7 +210,7 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                 }
                 binding.slider.setPresetTransformer(SliderLayout.Transformer.Default);
                 binding.slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-                //binding.slider.setCustomAnimation(new DescriptionAnimation());
+//                binding.slider.setCustomAnimation(new DescriptionAnimation());
                 binding.slider.setDuration(5000);
                 binding.slider.addOnPageChangeListener(ProductPage.this);
 
@@ -230,9 +220,10 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                     public void run() {
                         if (isConnected()) {
                             String result = GET(review);
+                            //noinspection MismatchedQueryAndUpdateOfCollection
                             JSONParser jp = new JSONParser();
-                            JSONObject jsonObject = null;
-                            Review r = null;
+                            JSONObject jsonObject;
+                            Review r;
                             try {
                                 jsonObject = new JSONObject(result);
                                 r = jp.parseRating(jsonObject);
