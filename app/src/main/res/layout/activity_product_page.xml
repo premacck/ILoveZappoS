@@ -6,6 +6,7 @@
 
     <data class="Bind_product">
         <variable name="product" type="com.example.prembros.ilz.Product"/>
+        <variable name="review" type="com.example.prembros.ilz.Review"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -51,7 +52,7 @@
                     custom:selected_height="6dp"
                     custom:unselected_width="5dp"
                     custom:unselected_height="5dp"
-                    android:layout_marginBottom="20dp"/>
+                    android:layout_marginBottom="19dp"/>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar_product_page"
@@ -73,7 +74,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp">
 
                 <TextView android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -81,17 +83,87 @@
                     android:text="@{product.originalPrice}"
                     android:layout_margin="@dimen/text_margin"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="#000000"
+                    android:textColor="@color/colorPrimaryDark"
                     />
-
+                <TextView
+                    android:id="@+id/brand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:text="@{product.brandName}"/>
+                <TextView
+                    android:id="@+id/productName"
+                    android:layout_width="wrap_content"
+                    android:layout_toLeftOf="@id/price_text"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/brand"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:text="@{product.productName}"/>
+                <TextView
+                    android:id="@+id/reviewHead"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/productName"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:text="Top Review"/>
+                <TextView
+                    android:id="@+id/reviewName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/reviewHead"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@{review.name}"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/price_text"
-                    android:layout_margin="@dimen/text_margin"
-                    android:text="@{product.productUrl}"/>
+                    android:layout_below="@id/reviewHead"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toRightOf="@id/reviewName"
+                    android:layout_marginLeft="70dp"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@{review.location}"/>
+                <TextView
+                    android:id="@+id/reviewDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/reviewName"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_alignParentLeft="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@{review.date}"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/reviewDate"
+                    android:textSize="14sp"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:text="@{review.summary}"/>
 
             </RelativeLayout>
 

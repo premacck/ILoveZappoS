@@ -1,17 +1,24 @@
 package com.example.prembros.ilz;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.media.Rating;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.SliderLayout;
@@ -39,12 +46,12 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
     Product p;
     Bind_product binding;
     ActionBar ab;
+    String review;
     HashMap<String,String> url_maps = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_product_page);
-        Intent intent = getIntent();
        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_page);
         setSupportActionBar(binding.toolbarProductPage);
         ab = getSupportActionBar();
@@ -62,15 +69,11 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
         });*/
 
         fixedStr = getIntent().getExtras().getString("fixedStr");
-        Thread thread = new Thread(new Runnable() {
-            public void run() {
                 if (isConnected()) {
                     new HttpAsyncTask().execute(fixedStr);
                 }
-            }
-        });
-        thread.start();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -202,11 +205,10 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                     TextSliderView textSliderView = new TextSliderView(ProductPage.this);
                     // initialize a SliderLayout
                     textSliderView
+                            .description(p.getProductName())
                             .image(url_maps.get(name))
                             .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                             .setOnSliderClickListener(ProductPage.this);
-
-//                    .description(p.getProductName())
                     //add your extra information
                     textSliderView.bundle(new Bundle());
                     textSliderView.getBundle()
@@ -216,10 +218,33 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                 }
                 binding.slider.setPresetTransformer(SliderLayout.Transformer.Default);
                 binding.slider.setPresetIndicator(SliderLayout.PresetIndicators.Center_Bottom);
-                binding.slider.setCustomAnimation(new DescriptionAnimation());
+//                binding.slider.setCustomAnimation(new DescriptionAnimation());
                 binding.slider.setDuration(5000);
                 binding.slider.addOnPageChangeListener(ProductPage.this);
+
+                review = "http://api.zappos.com/Review?productId="+p.getProductId()+"&page=1&key=b743e26728e16b81da139182bb2094357c31d331";
+
+                Thread thread = new Thread(new Runnable() {
+                    public void run() {
+                        if (isConnected()) {
+                            String result = GET(review);
+                            JSONParser jp = new JSONParser();
+                            JSONObject jsonObject = null;
+                            Review r = null;
+                            try {
+                                jsonObject = new JSONObject(result);
+                                r = jp.parseRating(jsonObject);
+                                binding.setReview(r);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                });
+                thread.start();
             }
         }
     }
+
 }

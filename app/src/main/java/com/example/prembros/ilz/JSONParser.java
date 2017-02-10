@@ -20,6 +20,7 @@ public class JSONParser extends ArrayList<Product> {
         return getQuestions(jFieldArray);
     }
 
+
     private Product getQuestions(JSONArray jQuestions){
         
         Product product = null;
@@ -52,5 +53,45 @@ public class JSONParser extends ArrayList<Product> {
             e.printStackTrace();
         }
         return p;
+    }
+
+
+    public Review parseRating(JSONObject jObject){
+
+        JSONArray jFieldArray = null;
+
+        try {
+            jFieldArray = jObject.getJSONArray("reviews");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return getReviews(jFieldArray);
+    }
+    private Review getReviews(JSONArray jQuestions){
+
+        Review review = null;
+        try {
+            //** Call getQuestion with question JSON object to parse the question *//*
+            review = getReviews((JSONObject)jQuestions.get(0));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return review;
+    }
+    private Review getReviews(JSONObject jQuestion){
+
+        Review review = new Review();
+
+        try {
+            review.summary= jQuestion.getString("summary");
+            review.date = jQuestion.getString("date");
+            review.location = jQuestion.getString("location");
+            review.name = jQuestion.getString("name");
+            review.overallRating = jQuestion.getString("overallRating");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return review;
     }
 }
