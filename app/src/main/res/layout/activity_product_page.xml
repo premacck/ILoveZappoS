@@ -31,36 +31,86 @@
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <com.daimajia.slider.library.SliderLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/slider"
-                    custom:pager_animation="Stack"
-                    custom:auto_cycle="false"
-                    custom:indicator_visibility="visible"
-                    custom:pager_animation_span="500"/>
-
-                <com.daimajia.slider.library.Indicators.PagerIndicator
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/AndroidImageSlider_Attractive_Rect_Blue"
-                    android:gravity="center"
-                    custom:selected_color="#0095BF"
-                    custom:unselected_color="#5b263238"
-                    custom:shape="oval"
-                    custom:indicator_visibility="visible"
-                    custom:selected_width="6dp"
-                    custom:selected_height="6dp"
-                    custom:unselected_width="5dp"
-                    custom:unselected_height="5dp"
-                    android:layout_marginBottom="19dp"/>
-
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar_product_page"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+                <io.codetail.widget.RevealFrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.daimajia.slider.library.SliderLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/slider"
+                        custom:pager_animation="Stack"
+                        custom:auto_cycle="true"
+                        custom:indicator_visibility="visible"
+                        custom:pager_animation_span="500">
+
+                        <ProgressBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:indeterminate="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="110dp"
+                            android:id="@+id/progressBar" />
+                    </com.daimajia.slider.library.SliderLayout>
+
+                    <LinearLayout
+                        android:id="@+id/item_added_notification"
+                        android:orientation="vertical"
+                        android:dividerPadding="10dp"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center_horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="25sp"
+                            android:layout_marginTop="@dimen/article_keylines"
+                            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                            android:text="@string/item_added_to_cart"
+                            style="@style/ZoomButtons"/>
+
+                        <Button
+                            android:id="@+id/button_view_cart"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/view_cart"
+                            style="@style/ZoomButtons"/>
+
+                        <Button
+                            android:id="@+id/button_back"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/back"
+                            style="@style/ZoomButtons"/>
+
+                    </LinearLayout>
+
+                    <com.daimajia.slider.library.Indicators.PagerIndicator
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/AndroidImageSlider_Attractive_Rect_Blue"
+                        android:gravity="center"
+                        custom:selected_color="#0095BF"
+                        custom:unselected_color="#5b263238"
+                        custom:shape="oval"
+                        custom:indicator_visibility="visible"
+                        custom:selected_width="6dp"
+                        custom:selected_height="6dp"
+                        custom:unselected_width="5dp"
+                        custom:unselected_height="5dp"
+                        android:layout_marginBottom="19dp"/>
+
+                </io.codetail.widget.RevealFrameLayout>
 
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
@@ -248,7 +298,7 @@
         </android.support.v4.widget.NestedScrollView>
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/fab_add_to_cart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/fab_margin"

@@ -12,4 +12,7 @@
     <string name="rating">Rating</string>
     <string name="share">Share</string>
     <string name="about">About</string>
+    <string name="view_cart">View cart</string>
+    <string name="back">Back</string>
+    <string name="item_added_to_cart">Item added to cart!</string>
 </resources>

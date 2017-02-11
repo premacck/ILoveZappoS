@@ -6,10 +6,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -29,14 +34,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 
-public class ProductPage extends AppCompatActivity implements BaseSliderView.OnSliderClickListener,
-        ViewPagerEx.OnPageChangeListener {
+import io.codetail.animation.SupportAnimator;
+import io.codetail.animation.ViewAnimationUtils;
 
+public class ProductPage extends AppCompatActivity implements BaseSliderView.OnSliderClickListener,
+        ViewPagerEx.OnPageChangeListener{
+
+    boolean hidden = true;
+    boolean revealed = false;
     String fixedStr;
     Product p;
     Bind_product binding;
     ActionBar ab;
     String review;
+    SupportAnimator animator;
     HashMap<String,String> url_maps = new HashMap<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +61,37 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-/*        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final LinearLayout mRevealView = (LinearLayout) findViewById(R.id.item_added_notification);
+
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_to_cart);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (!revealed) {
+                    animationForward(fab, mRevealView);
+                } else {
+                    animationReversed(fab, mRevealView);
+                }
             }
-        });*/
+        });
+
+        Button back = (Button) findViewById(R.id.button_back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hidden = true;
+                revealed = false;
+                animationReversed(fab, mRevealView);
+            }
+        });
+        Button viewCart = (Button) findViewById(R.id.button_view_cart);
+        viewCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hidden = true;
+                revealed = false;
+            }
+        });
 
         fixedStr = getIntent().getExtras().getString("fixedStr");
                 if (isConnected()) {
@@ -65,6 +99,61 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                 }
     }
 
+    public void animationForward(FloatingActionButton fab, LinearLayout mRevealView){
+        revealed = true;
+//        fab.setBackgroundResource(R.drawable.rounded_cancel_button);
+        fab.setImageResource(R.drawable.ic_close);
+
+        float pixelDensity = getResources().getDisplayMetrics().density;
+        int centerX = mRevealView.getRight();
+        centerX -= ((28 * pixelDensity) + (16 * pixelDensity));
+        int centerY = mRevealView.getBottom();
+        int startRadius = 0;
+        int endRadius = (int) Math.hypot(mRevealView.getWidth(), mRevealView.getHeight());
+        animator = ViewAnimationUtils.createCircularReveal(mRevealView, centerX, centerY, startRadius, endRadius);
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
+        animator.setDuration(400);
+//                    animator.start();
+        if (hidden){
+            mRevealView.setVisibility(View.VISIBLE);
+            animator.start();
+            hidden = false;
+        }
+    }
+
+    public void animationReversed(FloatingActionButton fab, final LinearLayout mRevealView){
+        if (animator != null && !animator.isRunning()){
+
+//            fab.setBackgroundColor(Color.rgb(0, 188, 212));
+            fab.setImageResource(R.drawable.ic_add_shopping_cart);
+
+            animator = animator.reverse();
+            animator.addListener(new SupportAnimator.AnimatorListener() {
+                @Override
+                public void onAnimationStart() {
+
+                }
+
+                @Override
+                public void onAnimationEnd() {
+                    mRevealView.setVisibility(View.GONE);
+                    hidden = true;
+                    revealed = false;
+                }
+
+                @Override
+                public void onAnimationCancel() {
+
+                }
+
+                @Override
+                public void onAnimationRepeat() {
+
+                }
+            });
+            animator.start();
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,6 +252,7 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
         binding.slider.stopAutoCycle();
         super.onStop();
     }
+
     private class HttpAsyncTask extends AsyncTask<String, Void, Product> {
 
         @Override
