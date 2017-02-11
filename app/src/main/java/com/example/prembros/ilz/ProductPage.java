@@ -2,6 +2,7 @@ package com.example.prembros.ilz;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -52,6 +55,7 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
     String fixedStr;
     Product p;
     Bind_product binding;
+    RatingBar rb;
     ActionBar ab;
     String review;
     SupportAnimator animator;
@@ -64,39 +68,32 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
         if (isConnected()) {
             new HttpAsyncTask().execute(fixedStr);
         }
-        //Intent intent = getIntent();
-       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_page);
         setSupportActionBar(binding.toolbarProductPage);
         ab = getSupportActionBar();
         if (ab!=null){
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        final LinearLayout mRevealView = (LinearLayout) findViewById(R.id.item_added_notification);
-
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_add_to_cart);
-        fab.setOnClickListener(new View.OnClickListener() {
+        binding.fabAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!revealed) {
-                    animationForward(fab, mRevealView);
+                    animationForward(binding.fabAddToCart, binding.itemAddedNotification);
                 } else {
-                    animationReversed(fab, mRevealView);
+                    animationReversed(binding.fabAddToCart, binding.itemAddedNotification);
                 }
             }
         });
 
-        Button back = (Button) findViewById(R.id.button_back);
-        back.setOnClickListener(new View.OnClickListener() {
+        binding.buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hidden = true;
                 revealed = false;
-                animationReversed(fab, mRevealView);
+                animationReversed(binding.fabAddToCart, binding.itemAddedNotification);
             }
         });
-        Button viewCart = (Button) findViewById(R.id.button_view_cart);
-        viewCart.setOnClickListener(new View.OnClickListener() {
+        binding.buttonViewCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 hidden = true;
@@ -124,16 +121,34 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                         wishlist.startAnimation(AnimationUtils.loadAnimation(ProductPage.this, R.anim.anim_deselected));
                         wishlist.setBackgroundResource(R.drawable.ic_wishlist_add);
 //                CODE TO REMOVE ITEM FROM WISHLIST GOES HERE...
-                        Toast.makeText(ProductPage.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ProductPage.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();
                     }
 //            IF THE QUESTION IS NOT BOOKMARKED
                     else {
                         wishlist.startAnimation(AnimationUtils.loadAnimation(ProductPage.this, R.anim.anim_selected));
                         wishlist.setBackgroundResource(R.drawable.ic_wishlist);
 //                CODE TO ADD ITEM TO WISHLIST GOES HERE...
-                        Toast.makeText(ProductPage.this, "Added to wishlist", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ProductPage.this, "Added to wishlist", Toast.LENGTH_SHORT).show();
                     }
                 }
+            }
+        });
+
+        rb = (RatingBar) findViewById(R.id.ratingBarRate);
+        rb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                float r =  rb.getRating();
+                AlertDialog alertDialog = new AlertDialog.Builder(ProductPage.this).create();
+                alertDialog.setTitle("Rating Product");
+                alertDialog.setMessage("You are rating this product "+r+" Stars.");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                alertDialog.show();
             }
         });
     }
@@ -227,10 +242,10 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
 
         intent.putExtra(Intent.EXTRA_SUBJECT, "I love Zappos!");
         intent.putExtra(Intent.EXTRA_TEXT,
-                "Hey, I just found an amazing product on this app. Check it out here: ");
+                "Hey, I just found an amazing product on this app. Check it out here: "+p.getProductUrl());
 //        intent.putExtra(Intent.EXTRA_STREAM, uri);
         try{
-            startActivity(Intent.createChooser(intent, "Share your QuizResult"));
+            startActivity(Intent.createChooser(intent, "Share your Product"));
         } catch (ActivityNotFoundException e){
             Toast.makeText(this, "No app available!", Toast.LENGTH_SHORT).show();
         }
@@ -374,6 +389,7 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
                                 jsonObject = new JSONObject(result);
                                 r = jp.parseRating(jsonObject);
                                 binding.setReview(r);
+                                //TextView rat = findViewById(R.id.rati)
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -226,10 +226,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="25sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/colorPrimaryText"
-                        android:text="@{review.overallRating}"/>
+                        android:textSize="20sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:text="Rate this Product"/>
 
                     <RatingBar
                         android:layout_width="wrap_content"
@@ -237,7 +236,7 @@
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
                         android:layout_marginLeft="27dp"
                         android:layout_marginStart="27dp"
-                        android:id="@+id/ratingBar" />
+                        android:id="@+id/ratingBarRate" />
 
                 </LinearLayout>
 
@@ -277,8 +276,34 @@
                         android:textSize="18sp"
                         android:textColor="@color/colorPrimaryText"
                         android:text="@{review.name}"/>
+                    <TextView
+                        android:id="@+id/ratingDisplay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/reviewName"
+                        android:layout_toEndOf="@+id/reviewName"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorPrimaryText"
+                        android:text="@{review.overallRating}"/>
+                    <TextView
+                        android:id="@+id/rating5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/ratingDisplay"
+                        android:layout_toEndOf="@+id/ratingDisplay"
+                        android:textSize="18sp"
+                        android:text="/5 "/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/rating5"
+                        android:layout_toEndOf="@+id/rating5"
+                        android:layout_marginBottom="15dp"
+                        android:src="@android:drawable/star_on"/>
 
                     <TextView
+                        android:id="@+id/reviewLocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
