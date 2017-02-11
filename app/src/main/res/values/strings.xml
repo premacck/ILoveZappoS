@@ -15,4 +15,6 @@
     <string name="view_cart">View cart</string>
     <string name="back">Back</string>
     <string name="item_added_to_cart">Item added to cart!</string>
+    <string name="add_to_wishlist">Add to wishlist</string>
+    <string name="add_item_to_wishlist">Add item to wishlist</string>
 </resources>

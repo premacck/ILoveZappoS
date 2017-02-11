@@ -1,11 +1,14 @@
 package com.example.prembros.ilz;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +16,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -53,6 +60,10 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_product_page);
+        fixedStr = getIntent().getExtras().getString("fixedStr");
+        if (isConnected()) {
+            new HttpAsyncTask().execute(fixedStr);
+        }
         //Intent intent = getIntent();
        // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_product_page);
         setSupportActionBar(binding.toolbarProductPage);
@@ -93,10 +104,38 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
             }
         });
 
-        fixedStr = getIntent().getExtras().getString("fixedStr");
-                if (isConnected()) {
-                    new HttpAsyncTask().execute(fixedStr);
+        final ToggleButton wishlist = (ToggleButton) findViewById(R.id.wishlist_toggle_button);
+        final TextView wt = (TextView) findViewById(R.id.add_to_wishlist_text);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                wishlist.setVisibility(View.VISIBLE);
+                wt.setVisibility(View.VISIBLE);
+            }
+        }, 2000);
+
+        wishlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(wishlist !=null) {
+//            IF THE QUESTION IS BOOKMARKED
+                    if (!wishlist.isChecked()) {
+                        wishlist.startAnimation(AnimationUtils.loadAnimation(ProductPage.this, R.anim.anim_deselected));
+                        wishlist.setBackgroundResource(R.drawable.ic_wishlist_add);
+//                CODE TO REMOVE ITEM FROM WISHLIST GOES HERE...
+                        Toast.makeText(ProductPage.this, "Removed from wishlist", Toast.LENGTH_SHORT).show();
+                    }
+//            IF THE QUESTION IS NOT BOOKMARKED
+                    else {
+                        wishlist.startAnimation(AnimationUtils.loadAnimation(ProductPage.this, R.anim.anim_selected));
+                        wishlist.setBackgroundResource(R.drawable.ic_wishlist);
+//                CODE TO ADD ITEM TO WISHLIST GOES HERE...
+                        Toast.makeText(ProductPage.this, "Added to wishlist", Toast.LENGTH_SHORT).show();
+                    }
                 }
+            }
+        });
     }
 
     public void animationForward(FloatingActionButton fab, LinearLayout mRevealView){
@@ -115,8 +154,8 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
         animator.setDuration(400);
 //                    animator.start();
         if (hidden){
-            mRevealView.setVisibility(View.VISIBLE);
             animator.start();
+            mRevealView.setVisibility(View.VISIBLE);
             hidden = false;
         }
     }
@@ -164,10 +203,12 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.action_search:
-                return true;
+//            case R.id.action_search:
+//                return true;
             case R.id.action_cart:
                 return true;
+            case R.id.action_share:
+                share();
             default:
                 return false;
         }
@@ -179,6 +220,21 @@ public class ProductPage extends AppCompatActivity implements BaseSliderView.OnS
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
+    private void share(){
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.setType("text/*");
+
+        intent.putExtra(Intent.EXTRA_SUBJECT, "I love Zappos!");
+        intent.putExtra(Intent.EXTRA_TEXT,
+                "Hey, I just found an amazing product on this app. Check it out here: ");
+//        intent.putExtra(Intent.EXTRA_STREAM, uri);
+        try{
+            startActivity(Intent.createChooser(intent, "Share your QuizResult"));
+        } catch (ActivityNotFoundException e){
+            Toast.makeText(this, "No app available!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public String GET(String URLString) {
         InputStream inputStream = null;

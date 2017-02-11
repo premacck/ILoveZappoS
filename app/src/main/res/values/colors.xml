@@ -12,5 +12,5 @@
     <color name="colorPrimaryDark">#455A64</color>
     <color name="orange">#FF5722</color>
     <color name="colorAccent">#00BCD4</color>
-
+    <color name="toolbarTint">#41455a64</color>
 </resources>

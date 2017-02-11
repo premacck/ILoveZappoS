@@ -31,13 +31,6 @@
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
-                <android.support.v7.widget.Toolbar
-                    android:id="@+id/toolbar_product_page"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_collapseMode="pin"
-                    app:popupTheme="@style/AppTheme.PopupOverlay" />
-
                 <io.codetail.widget.RevealFrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
@@ -49,16 +42,7 @@
                         custom:pager_animation="Stack"
                         custom:auto_cycle="true"
                         custom:indicator_visibility="visible"
-                        custom:pager_animation_span="500">
-
-                        <ProgressBar
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:indeterminate="true"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="110dp"
-                            android:id="@+id/progressBar" />
-                    </com.daimajia.slider.library.SliderLayout>
+                        custom:pager_animation_span="500"/>
 
                     <LinearLayout
                         android:id="@+id/item_added_notification"
@@ -112,6 +96,14 @@
 
                 </io.codetail.widget.RevealFrameLayout>
 
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar_product_page"
+                    android:background="@color/toolbarTint"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
@@ -159,7 +151,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@{product.originalPrice}"
-                        android:layout_alignParentBottom="true"
+                        android:layout_above="@+id/add_to_wishlist_text"
                         android:layout_alignParentRight="true"
                         android:layout_alignParentEnd="true"
                         android:textSize="25sp"
@@ -173,9 +165,34 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentStart="true"
                         android:layout_below="@id/productName"
+                        android:layout_marginTop="10dp"
                         android:textSize="18sp"
                         android:textColor="@color/colorPrimaryDark"
                         android:text="@{product.brandName}"/>
+
+                    <TextView
+                        android:visibility="invisible"
+                        android:id="@+id/add_to_wishlist_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/brand"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="@dimen/article_titles"
+                        android:text="@string/add_to_wishlist"
+                        android:textColor="@color/colorSecondaryText"/>
+
+                    <ToggleButton
+                        android:visibility="invisible"
+                        android:id="@+id/wishlist_toggle_button"
+                        android:textOff=""
+                        android:textOn=""
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/mal_baseline_half"
+                        android:contentDescription="@string/add_item_to_wishlist"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@+id/add_to_wishlist_text"
+                        android:background="@drawable/ic_wishlist_add"/>
 
                 </RelativeLayout>
 
